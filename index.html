@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Music Player</title>
+  <title>Audio Player with Dark/Day Mode</title>
   <style>
     body {
       margin: 0;
@@ -14,29 +14,44 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-    .player {
+    .container {
       text-align: center;
       padding: 30px;
       border-radius: 16px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      width: 320px;
       transition: background-color 0.3s, color 0.3s;
-      position: relative;
+      width: 320px;
     }
 
-    .top-buttons {
-      position: absolute;
-      top: 10px;
-      right: 20px;
+    .container h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
+    audio {
+      width: 100%;
+      outline: none;
     }
 
     .toggle-btn {
-      padding: 8px 14px;
+      margin-top: 20px;
+      padding: 10px 20px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 13px;
-      transition: background-color 0.3s, transform 0.2s;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    /* Light Mode */
+    body.light {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    .container.light {
+      background-color: #ffffff;
+      color: #333;
     }
 
     .toggle-btn.light {
@@ -44,201 +59,53 @@
       color: #fff;
     }
 
+    /* Dark Mode */
+    body.dark {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .container.dark {
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
     .toggle-btn.dark {
       background-color: #fff;
       color: #121212;
     }
-
-    .player h2 {
-      margin: 50px 0 20px;
-      font-size: 22px;
-    }
-
-    audio {
-      display: none;
-    }
-
-    .progress-container {
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    #progressBar {
-      width: 100%;
-      height: 6px;
-      background: #ccc;
-      border-radius: 3px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    #progress {
-      height: 100%;
-      width: 0%;
-      background: #00ffcc;
-      border-radius: 3px;
-    }
-
-    .duration-display {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    .volume-control {
-      margin-top: 10px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-    }
-
-    .beats {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-      height: 30px;
-    }
-
-    .bar {
-      width: 6px;
-      height: 100%;
-      margin: 0 2px;
-      background: #00ffcc;
-      animation: pulse 1s infinite ease-in-out;
-    }
-
-    .bar:nth-child(2) { animation-delay: 0.2s; }
-    .bar:nth-child(3) { animation-delay: 0.4s; }
-    .bar:nth-child(4) { animation-delay: 0.6s; }
-    .bar:nth-child(5) { animation-delay: 0.8s; }
-
-    @keyframes pulse {
-      0%, 100% { transform: scaleY(0.3); }
-      50% { transform: scaleY(1); }
-    }
-
-    .bottom-controls {
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .bottom-controls button {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      background-color: #00ffcc;
-      color: #121212;
-      font-weight: bold;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .bottom-controls button:hover {
-      background-color: #00e6b8;
-      transform: scale(1.05);
-    }
-
-    /* Light Mode */
-    body.light { background-color: #f0f0f0; color: #333; }
-    .player.light { background-color: #fff; color: #333; }
-
-    /* Dark Mode */
-    body.dark { background-color: #121212; color: #fff; }
-    .player.dark { background-color: #1e1e1e; color: #fff; }
   </style>
 </head>
 <body class="dark">
 
-  <div class="player dark" id="playerContainer">
-    <div class="top-buttons">
-      <button class="toggle-btn dark" onclick="toggleMode()">🌗 Day Mode</button>
-    </div>
-
-    <h2>🎶 Lo-Fi Beats</h2>
-    <audio id="audioPlayer">
+  <div class="container dark" id="playerContainer">
+    <h2>🎶 Lo-Fi Vibes</h2>
+    <audio controls>
       <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
     </audio>
-
-    <div class="progress-container" onclick="seek(event)">
-      <div id="progressBar">
-        <div id="progress"></div>
-      </div>
-    </div>
-
-    <div class="duration-display">
-      ⏱ <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
-    </div>
-
-    <div class="volume-control">
-      <label for="volume">🔊 Volume</label>
-      <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
-    </div>
-
-    <div class="beats" id="beatBars">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>
-
-    <div class="bottom-controls">
-      <button onclick="rewind10()">⏪ 10s</button>
-      <button onclick="togglePlayPause()" id="playPauseBtn">▶️ Play</button>
-      <button onclick="forward10()">10s ⏩</button>
-      <button onclick="nextTrack()">⏭️ Next</button>
-    </div>
+    <button class="toggle-btn dark" onclick="toggleMode()">Switch to Day Mode</button>
   </div>
 
   <script>
-    const audio = document.getElementById('audioPlayer');
-    const volumeSlider = document.getElementById('volume');
-    const beatBars = document.getElementById('beatBars');
-    const currentTimeDisplay = document.getElementById('currentTime');
-    const totalTimeDisplay = document.getElementById('totalTime');
-    const progressBar = document.getElementById('progress');
-    const progressContainer = document.getElementById('progressBar');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    const playerContainer = document.getElementById('playerContainer');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const playlist = ['your-audio.mp3', 'track2.mp3', 'track3.mp3'];
-    let currentTrackIndex = 0;
+    function toggleMode() {
+      const body = document.body;
+      const container = document.getElementById('playerContainer');
+      const button = document.querySelector('.toggle-btn');
 
-    audio.volume = volumeSlider.value;
-
-    volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
-    });
-
-    audio.addEventListener('loadedmetadata', () => {
-      totalTimeDisplay.textContent = formatTime(audio.duration);
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      currentTimeDisplay.textContent = formatTime(audio.currentTime);
-      const percent = (audio.currentTime / audio.duration) * 100;
-      progressBar.style.width = percent + '%';
-    });
-
-    audio.addEventListener('play', () => {
-      beatBars.style.visibility = 'visible';
-      playPauseBtn.textContent = '⏸️ Pause';
-    });
-
-    audio.addEventListener('pause', () => {
-      beatBars.style.visibility = 'hidden';
-      playPauseBtn.textContent = '▶️ Play';
-    });
-
-    function formatTime(seconds) {
-      const min = Math.floor(seconds / 60);
-      const sec = Math.floor(seconds % 60);
-      return `${min}:${sec < 10 ? '0' + sec : sec}`;
+      if (body.classList.contains('dark')) {
+        body.classList.replace('dark', 'light');
+        container.classList.replace('dark', 'light');
+        button.classList.replace('dark', 'light');
+        button.textContent = 'Switch to Dark Mode';
+      } else {
+        body.classList.replace('light', 'dark');
+        container.classList.replace('light', 'dark');
+        button.classList.replace('light', 'dark');
+        button.textContent = 'Switch to Day Mode';
+      }
     }
+  </script>
 
-    function seek(event) {
-      const rect = progressContainer.getBounding
+</body>
+</html>
