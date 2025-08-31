@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stylish Music Player</title>
+  <title>Music Player</title>
   <style>
     body {
       margin: 0;
@@ -21,33 +21,25 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       width: 320px;
       transition: background-color 0.3s, color 0.3s;
+      position: relative;
     }
 
-    .player h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
-
-    audio {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .volume-control, .duration-display, .controls {
-      margin-top: 10px;
-    }
-
-    input[type="range"] {
-      width: 100%;
+    .top-buttons {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
     }
 
     .toggle-btn, .shuffle-btn {
-      margin-top: 15px;
-      padding: 10px 18px;
+      padding: 8px 14px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       transition: background-color 0.3s, transform 0.2s;
     }
 
@@ -62,8 +54,57 @@
       transform: scale(1.05);
     }
 
-    .toggle-btn {
-      margin-left: 10px;
+    .toggle-btn.light {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .toggle-btn.dark {
+      background-color: #fff;
+      color: #121212;
+    }
+
+    .player h2 {
+      margin: 50px 0 20px;
+      font-size: 22px;
+    }
+
+    audio {
+      display: none;
+    }
+
+    .progress-container {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    #progressBar {
+      width: 100%;
+      height: 6px;
+      background: #ccc;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    #progress {
+      height: 100%;
+      width: 0%;
+      background: #00ffcc;
+      border-radius: 3px;
+    }
+
+    .duration-display {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .volume-control {
+      margin-top: 10px;
+    }
+
+    input[type="range"] {
+      width: 100%;
     }
 
     .beats {
@@ -94,22 +135,30 @@
     /* Light Mode */
     body.light { background-color: #f0f0f0; color: #333; }
     .player.light { background-color: #fff; color: #333; }
-    .toggle-btn.light { background-color: #333; color: #fff; }
 
     /* Dark Mode */
     body.dark { background-color: #121212; color: #fff; }
     .player.dark { background-color: #1e1e1e; color: #fff; }
-    .toggle-btn.dark { background-color: #fff; color: #121212; }
   </style>
 </head>
 <body class="dark">
 
   <div class="player dark" id="playerContainer">
+    <div class="top-buttons">
+      <button class="shuffle-btn" onclick="shuffleTrack()">🔀 Shuffle</button>
+      <button class="toggle-btn dark" onclick="toggleMode()">🌗 Day Mode</button>
+    </div>
+
     <h2>🎶 Lo-Fi Beats</h2>
-    <audio id="audioPlayer" controls>
+    <audio id="audioPlayer">
       <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
     </audio>
+
+    <div class="progress-container" onclick="seek(event)">
+      <div id="progressBar">
+        <div id="progress"></div>
+      </div>
+    </div>
 
     <div class="duration-display">
       ⏱ <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
@@ -127,11 +176,6 @@
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
-
-    <div class="controls">
-      <button class="shuffle-btn" onclick="shuffleTrack()">🔀 Shuffle</button>
-      <button class="toggle-btn dark" onclick="toggleMode()">🌗 Day Mode</button>
-    </div>
   </div>
 
   <script>
@@ -140,8 +184,15 @@
     const beatBars = document.getElementById('beatBars');
     const currentTimeDisplay = document.getElementById('currentTime');
     const totalTimeDisplay = document.getElementById('totalTime');
+    const progressBar = document.getElementById('progress');
+    const progressContainer = document.getElementById('progressBar');
+    const toggleBtn = document.querySelector('.toggle-btn');
+    const playerContainer = document.getElementById('playerContainer');
     const playlist = ['your-audio.mp3', 'track2.mp3', 'track3.mp3'];
     let currentTrackIndex = 0;
+
+    audio.volume = volumeSlider.value;
+    audio.play();
 
     volumeSlider.addEventListener('input', () => {
       audio.volume = volumeSlider.value;
@@ -153,6 +204,8 @@
 
     audio.addEventListener('timeupdate', () => {
       currentTimeDisplay.textContent = formatTime(audio.currentTime);
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = percent + '%';
     });
 
     audio.addEventListener('play', () => {
@@ -169,19 +222,24 @@
       return `${min}:${sec < 10 ? '0' + sec : sec}`;
     }
 
+    function seek(event) {
+      const rect = progressContainer.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const percent = offsetX / rect.width;
+      audio.currentTime = percent * audio.duration;
+    }
+
     function toggleMode() {
       const body = document.body;
-      const container = document.getElementById('playerContainer');
-      const toggleBtn = document.querySelector('.toggle-btn');
 
       if (body.classList.contains('dark')) {
         body.classList.replace('dark', 'light');
-        container.classList.replace('dark', 'light');
+        playerContainer.classList.replace('dark', 'light');
         toggleBtn.classList.replace('dark', 'light');
         toggleBtn.textContent = '🌙 Dark Mode';
       } else {
         body.classList.replace('light', 'dark');
-        container.classList.replace('light', 'dark');
+        playerContainer.classList.replace('light', 'dark');
         toggleBtn.classList.replace('light', 'dark');
         toggleBtn.textContent = '🌗 Day Mode';
       }
@@ -195,6 +253,7 @@
 
       currentTrackIndex = newIndex;
       audio.src = playlist[currentTrackIndex];
+      audio.load();
       audio.play();
     }
   </script>
