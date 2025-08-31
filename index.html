@@ -1,3 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stylish Music Player</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .music-player {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 360px;
+      text-align: center;
+    }
+
+    .volume-control {
+      margin-bottom: 20px;
+    }
+
+    .volume-control label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .volume-control input[type="range"] {
+      width: 100%;
+    }
+
+    .song-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #ffdd57;
+    }
+
+    .controls button {
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffdd57;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .controls button:hover {
+      background-color: #ffc107;
+    }
+
+    .progress-container {
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-filled {
+      height: 100%;
+      background-color: #ffdd57;
+      width: 0%;
+      border-radius: 5px;
+      transition: width 0.2s;
+    }
+
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-top: 6px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
 <div class="music-player">
   <div class="volume-control">
     <label for="volume">🔊 Volume</label>
@@ -25,3 +121,56 @@
     </div>
   </div>
 </div>
+
+<script>
+  const audio = document.getElementById('audio');
+  const playButton = document.getElementById('playButton');
+  const progressBar = document.getElementById('progressBar');
+  const currentTimeEl = document.getElementById('currentTime');
+  const durationEl = document.getElementById('duration');
+  const volumeSlider = document.getElementById('volume');
+  const songTitleEl = document.getElementById('songTitle');
+
+  function togglePlay() {
+    if (audio.paused) {
+      audio.play();
+      playButton.textContent = '⏸️ Pause';
+    } else {
+      audio.pause();
+      playButton.textContent = '▶️ Play';
+    }
+  }
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = `${percent}%`;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+  });
+
+  audio.addEventListener('loadedmetadata', () => {
+    durationEl.textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener('ended', () => {
+    playButton.textContent = '▶️ Play';
+  });
+
+  function seek(e) {
+    const rect = e.target.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = percent * audio.duration;
+  }
+
+  volumeSlider.addEventListener('input', () => {
+    audio.volume = volumeSlider.value;
+  });
+</script>
+
+</body>
+</html>
