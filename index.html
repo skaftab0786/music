@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Music Player with Beats</title>
+  <title>Advanced Music Player</title>
   <style>
     body {
       margin: 0;
@@ -33,7 +33,7 @@
       margin-bottom: 10px;
     }
 
-    .volume-control {
+    .volume-control, .duration-display, .controls {
       margin-top: 10px;
     }
 
@@ -41,8 +41,8 @@
       width: 100%;
     }
 
-    .toggle-btn {
-      margin-top: 20px;
+    .toggle-btn, .shuffle-btn {
+      margin-top: 15px;
       padding: 8px 16px;
       border: none;
       border-radius: 8px;
@@ -78,12 +78,12 @@
     /* Light Mode */
     body.light { background-color: #f0f0f0; color: #333; }
     .player.light { background-color: #fff; color: #333; }
-    .toggle-btn.light { background-color: #333; color: #fff; }
+    .toggle-btn.light, .shuffle-btn.light { background-color: #333; color: #fff; }
 
     /* Dark Mode */
     body.dark { background-color: #121212; color: #fff; }
     .player.dark { background-color: #1e1e1e; color: #fff; }
-    .toggle-btn.dark { background-color: #fff; color: #121212; }
+    .toggle-btn.dark, .shuffle-btn.dark { background-color: #fff; color: #121212; }
   </style>
 </head>
 <body class="dark">
@@ -94,6 +94,10 @@
       <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
+
+    <div class="duration-display">
+      ⏱ <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
+    </div>
 
     <div class="volume-control">
       <label for="volume">🔊 Volume</label>
@@ -108,16 +112,32 @@
       <div class="bar"></div>
     </div>
 
-    <button class="toggle-btn dark" onclick="toggleMode()">Switch to Day Mode</button>
+    <div class="controls">
+      <button class="shuffle-btn dark" onclick="shuffleTrack()">🔀 Shuffle</button>
+      <button class="toggle-btn dark" onclick="toggleMode()">🌗 Switch to Day Mode</button>
+    </div>
   </div>
 
   <script>
     const audio = document.getElementById('audioPlayer');
     const volumeSlider = document.getElementById('volume');
     const beatBars = document.getElementById('beatBars');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const totalTimeDisplay = document.getElementById('totalTime');
+    const playlist = ['your-audio.mp3', 'track2.mp3', 'track3.mp3']; // Add your tracks here
+
+    let currentTrackIndex = 0;
 
     volumeSlider.addEventListener('input', () => {
       audio.volume = volumeSlider.value;
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      totalTimeDisplay.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
     });
 
     audio.addEventListener('play', () => {
@@ -128,22 +148,42 @@
       beatBars.style.visibility = 'hidden';
     });
 
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec < 10 ? '0' + sec : sec}`;
+    }
+
     function toggleMode() {
       const body = document.body;
       const container = document.getElementById('playerContainer');
-      const button = document.querySelector('.toggle-btn');
+      const toggleBtn = document.querySelector('.toggle-btn');
+      const shuffleBtn = document.querySelector('.shuffle-btn');
 
       if (body.classList.contains('dark')) {
         body.classList.replace('dark', 'light');
         container.classList.replace('dark', 'light');
-        button.classList.replace('dark', 'light');
-        button.textContent = 'Switch to Dark Mode';
+        toggleBtn.classList.replace('dark', 'light');
+        shuffleBtn.classList.replace('dark', 'light');
+        toggleBtn.textContent = '🌙 Switch to Dark Mode';
       } else {
         body.classList.replace('light', 'dark');
         container.classList.replace('light', 'dark');
-        button.classList.replace('light', 'dark');
-        button.textContent = 'Switch to Day Mode';
+        toggleBtn.classList.replace('light', 'dark');
+        shuffleBtn.classList.replace('light', 'dark');
+        toggleBtn.textContent = '🌗 Switch to Day Mode';
       }
+    }
+
+    function shuffleTrack() {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * playlist.length);
+      } while (newIndex === currentTrackIndex);
+
+      currentTrackIndex = newIndex;
+      audio.src = playlist[currentTrackIndex];
+      audio.play();
     }
   </script>
 
