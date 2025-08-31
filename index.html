@@ -2,39 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Custom Audio Player</title>
+  <title>Dark Mode Audio Player</title>
   <style>
     body {
-      background: #f0f0f0;
-      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      height: 100vh;
+      background-color: #121212;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
     }
 
-    .audio-container {
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    .audio-box {
+      background-color: #1e1e1e;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
       text-align: center;
-      width: 300px;
+      width: 320px;
     }
 
-    .audio-container h2 {
-      margin-bottom: 15px;
-      font-size: 20px;
-      color: #333;
+    .audio-box h2 {
+      color: #ffffff;
+      margin-bottom: 20px;
+      font-size: 22px;
     }
 
     audio {
       width: 100%;
       outline: none;
+      filter: brightness(0.9);
+    }
+
+    /* Optional: Customize audio controls for WebKit browsers */
+    audio::-webkit-media-controls-panel {
+      background-color: #2c2c2c;
+      color: #fff;
     }
   </style>
 </head>
 <body>
+
+  <div class="audio-box">
+    <h2>🎶 Chill Beats</h2>
+    <audio controls>
+      <source src="your-music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+</body>
+</html>
+
 
   <div class="audio-container">
     <h2>🎵 Now Playing</h2>
