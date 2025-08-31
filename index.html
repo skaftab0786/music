@@ -1,33 +1,27 @@
 <div class="music-player">
-  <div class="song-title" id="songTitle">🎵 Select a Track</div>
+  <div class="volume-control">
+    <label for="volume">🔊 Volume</label>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+  </div>
+
+  <div class="song-title" id="songTitle">🎵 Peaceful Melody</div>
 
   <audio id="audio" preload="metadata">
     <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-  <audio id="audio" preload="metadata">
-    <source src="music/Millionaire Glory 128 Kbps.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+
   <div class="controls">
     <button onclick="togglePlay()" id="playButton">▶️ Play</button>
   </div>
 
-  <div class="progress-bar" onclick="seek(event)">
-    <div class="progress-filled" id="progressBar"></div>
-  </div>
-
-  <div class="time-display">
-    <span id="currentTime">0:00</span>
-    <span id="duration">0:00</span>
-  </div>
-
-  <div class="playlist">
-    <h3>🎶 Playlist</h3>
-    <ul id="trackList">
-      <li onclick="loadTrack('audio/Track1.mp3', 'Peaceful Melody')">Peaceful Melody</li>
-      <li onclick="loadTrack('audio/Track2.mp3', 'Energetic Vibes')">Energetic Vibes</li>
-      <li onclick="loadTrack('audio/Track3.mp3', 'Chill Sunset')">Chill Sunset</li>
-    </ul>
+  <div class="progress-container">
+    <div class="progress-bar" onclick="seek(event)">
+      <div class="progress-filled" id="progressBar"></div>
+    </div>
+    <div class="time-display">
+      <span id="currentTime">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
   </div>
 </div>
