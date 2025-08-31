@@ -1,219 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Custom Music Player</title>
+  <meta charset="UTF-8">
+  <title>🎧 Music Player</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: #fff;
-      display: flex;
-      height: 100vh;
-    }
-
-    .music-player {
-      flex: 1;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    .player-box {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      width: 360px;
-      text-align: center;
-    }
-
-    .song-title {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #ffdd57;
-    }
-
-    .controls button {
-      padding: 10px 16px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #ffdd57;
-      color: #333;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .controls button:hover {
-      background-color: #ffc107;
-    }
-
-    .volume-control {
-      margin: 20px 0;
-    }
-
-    .volume-control input[type="range"] {
-      width: 100%;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background-color: #ddd;
-      border-radius: 5px;
-      cursor: pointer;
-      position: relative;
+      height: 100vh;
       overflow: hidden;
+    }
+
+    .player-container {
+      text-align: center;
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #000;
+      width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    li:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .controls {
       margin-top: 20px;
     }
 
-    .progress-filled {
-      height: 100%;
-      background-color: #ffdd57;
-      width: 0%;
+    .controls button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
       border-radius: 5px;
-      transition: width 0.2s;
-    }
-
-    .time-display {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-top: 6px;
-      color: #fff;
-    }
-
-    .playlist {
-      width: 250px;
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .playlist h3 {
-      margin-bottom: 10px;
-      color: #ffdd57;
-    }
-
-    .playlist ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .playlist li {
-      padding: 10px;
-      margin-bottom: 8px;
-      background-color: #333;
-      border-radius: 6px;
+      background: #ffffff22;
+      color: white;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.3s;
     }
 
-    .playlist li:hover {
-      background-color: #555;
+    .controls button:hover {
+      background: #ffffff44;
+    }
+
+    .play-bar {
+      margin-top: 20px;
+    }
+
+    #volume {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .beats {
+      margin-top: 30px;
+      height: 20px;
+      background: repeating-linear-gradient(
+        90deg,
+        #fff,
+        #fff 5px,
+        transparent 5px,
+        transparent 10px
+      );
+      animation: beat 1s infinite linear;
+    }
+
+    @keyframes beat {
+      0% { transform: scaleX(1); }
+      50% { transform: scaleX(1.2); }
+      100% { transform: scaleX(1); }
     }
   </style>
 </head>
 <body>
-
-<div class="playlist">
-  <h3>🎶 Playlist</h3>
-  <ul>
-    <li onclick="loadTrack('Guzaara Baaghi 4 128 Kbps.mp3', 'Guzaara Baaghi')">Guzaara Baaghi</li>
-    <li onclick="loadTrack('Millionaire Glory 128 Kbps.mp3', 'Millionaire Glory')">Millionaire Glory </li>
-    <li onclick="loadTrack('audio/ChillSunset.mp3', 'Chill Sunset')">Chill Sunset</li>
-  </ul>
-</div>
-
-<div class="music-player">
-  <div class="player-box">
-    <div class="song-title" id="songTitle">🎵 Guzaara</div>
-
-    <audio id="audio" preload="metadata">
-      <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
+  <div class="player-container">
+    <h1>🎵 My Music Player</h1>
+    <ul id="songs">
+      <li data-src="Guzaara Baaghi 4 128 Kbps.mp3">Song 1</li>
+      <li data-src="Millionaire Glory 128 Kbps.mp3">Song 2</li>
+      <li data-src="song3.mp3">Song 3</li>
+    </ul>
 
     <div class="controls">
-      <button onclick="togglePlay()" id="playButton">▶️ Play</button>
+      <button id="playAll">▶️ Play All</button>
+      <button id="playPause">⏯️ Play/Pause</button>
+      <button id="next">⏭️ Next</button>
+      <input type="range" id="volume" min="0" max="1" step="0.01">
     </div>
 
-    <div class="volume-control">
-      <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+    <div class="play-bar">
+      <span id="currentSong">No song playing</span>
     </div>
 
-    <div class="progress-bar" onclick="seek(event)">
-      <div class="progress-filled" id="progressBar"></div>
-    </div>
+    <audio id="audio" controls style="display:none;"></audio>
 
-    <div class="time-display">
-      <span id="currentTime">0:00</span>
-      <span id="duration">0:00</span>
-    </div>
+    <div class="beats"></div>
   </div>
-</div>
 
-<script>
-  const audio = document.getElementById('audio');
-  const playButton = document.getElementById('playButton');
-  const progressBar = document.getElementById('progressBar');
-  const currentTimeEl = document.getElementById('currentTime');
-  const durationEl = document.getElementById('duration');
-  const volumeSlider = document.getElementById('volume');
-  const songTitleEl = document.getElementById('songTitle');
+  <script>
+    const audio = document.getElementById('audio');
+    const songItems = document.querySelectorAll('#songs li');
+    const playPauseBtn = document.getElementById('playPause');
+    const playAllBtn = document.getElementById('playAll');
+    const nextBtn = document.getElementById('next');
+    const volumeSlider = document.getElementById('volume');
+    const currentSongLabel = document.getElementById('currentSong');
 
-  function togglePlay() {
-    if (audio.paused) {
+    let currentIndex = 0;
+    let songs = Array.from(songItems).map(item => item.dataset.src);
+
+    songItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        currentIndex = index;
+        playSong(songs[currentIndex]);
+      });
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.src) {
+        audio.paused ? audio.play() : audio.pause();
+      } else {
+        playSong(songs[currentIndex]);
+      }
+    });
+
+    playAllBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      playSong(songs[currentIndex]);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % songs.length;
+      playSong(songs[currentIndex]);
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value;
+    });
+
+    audio.addEventListener('ended', () => {
+      currentIndex = (currentIndex + 1) % songs.length;
+      playSong(songs[currentIndex]);
+    });
+
+    function playSong(src) {
+      audio.src = src;
       audio.play();
-      playButton.textContent = '⏸️ Pause';
-    } else {
-      audio.pause();
-      playButton.textContent = '▶️ Play';
+      currentSongLabel.textContent = `Now Playing: ${src}`;
     }
-  }
-
-  function loadTrack(src, title) {
-    audio.src = src;
-    audio.load();
-    audio.play();
-    songTitleEl.textContent = `🎵 ${title}`;
-    playButton.textContent = '⏸️ Pause';
-  }
-
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }
-
-  audio.addEventListener('timeupdate', () => {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = `${percent}%`;
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-  });
-
-  audio.addEventListener('loadedmetadata', () => {
-    durationEl.textContent = formatTime(audio.duration);
-  });
-
-  audio.addEventListener('ended', () => {
-    playButton.textContent = '▶️ Play';
-  });
-
-  function seek(e) {
-    const rect = e.target.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = percent * audio.duration;
-  }
-
-  volumeSlider.addEventListener('input', () => {
-    audio.volume = volumeSlider.value;
-  });
-</script>
-
+  </script>
 </body>
 </html>
