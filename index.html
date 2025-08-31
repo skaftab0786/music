@@ -1,112 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Stylish Music Player</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    .music-player {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      width: 360px;
-      text-align: center;
-    }
-
-    .volume-control {
-      margin-bottom: 20px;
-    }
-
-    .volume-control label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .volume-control input[type="range"] {
-      width: 100%;
-    }
-
-    .song-title {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #007bff;
-    }
-
-    .controls button {
-      padding: 10px 16px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .controls button:hover {
-      background-color: #0056b3;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background-color: #ddd;
-      border-radius: 4px;
-      margin-top: 20px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .progress-filled {
-      height: 100%;
-      background-color: #007bff;
-      width: 0%;
-      border-radius: 4px;
-      transition: width 0.2s;
-    }
-
-    .time-display {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-top: 6px;
-    }
-  </style>
-</head>
-<body>
-
 <div class="music-player">
-  <div class="volume-control">
-    <label for="volume">🔊 Volume</label>
-    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
-  </div>
-
-  <div class="song-title" id="songTitle">🎵 Peaceful Melody</div>
+  <div class="song-title" id="songTitle">🎵 Select a Track</div>
 
   <audio id="audio" preload="metadata">
     <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-<source src="music/Millionaire Glory 128 Kbps.mp3" type="audio/mpeg">
+  <audio id="audio" preload="metadata">
+    <source src="music/Millionaire Glory 128 Kbps.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
   <div class="controls">
-    <button onclick="togglePlay()">▶️ / ⏸️</button>
+    <button onclick="togglePlay()" id="playButton">▶️ Play</button>
   </div>
 
   <div class="progress-bar" onclick="seek(event)">
@@ -117,45 +21,13 @@
     <span id="currentTime">0:00</span>
     <span id="duration">0:00</span>
   </div>
+
+  <div class="playlist">
+    <h3>🎶 Playlist</h3>
+    <ul id="trackList">
+      <li onclick="loadTrack('audio/Track1.mp3', 'Peaceful Melody')">Peaceful Melody</li>
+      <li onclick="loadTrack('audio/Track2.mp3', 'Energetic Vibes')">Energetic Vibes</li>
+      <li onclick="loadTrack('audio/Track3.mp3', 'Chill Sunset')">Chill Sunset</li>
+    </ul>
+  </div>
 </div>
-
-<script>
-  const audio = document.getElementById('audio');
-  const progressBar = document.getElementById('progressBar');
-  const currentTimeEl = document.getElementById('currentTime');
-  const durationEl = document.getElementById('duration');
-  const volumeSlider = document.getElementById('volume');
-
-  function togglePlay() {
-    audio.paused ? audio.play() : audio.pause();
-  }
-
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  }
-
-  audio.addEventListener('timeupdate', () => {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = `${percent}%`;
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-  });
-
-  audio.addEventListener('loadedmetadata', () => {
-    durationEl.textContent = formatTime(audio.duration);
-  });
-
-  function seek(e) {
-    const rect = e.target.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = percent * audio.duration;
-  }
-
-  volumeSlider.addEventListener('input', () => {
-    audio.volume = volumeSlider.value;
-  });
-</script>
-
-</body>
-</html>
