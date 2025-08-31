@@ -27,31 +27,16 @@
     .top-buttons {
       position: absolute;
       top: 10px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 20px;
+      right: 20px;
     }
 
-    .toggle-btn, .shuffle-btn {
+    .toggle-btn {
       padding: 8px 14px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
       transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .shuffle-btn {
-      background-color: #00ffcc;
-      color: #121212;
-      font-weight: bold;
-    }
-
-    .shuffle-btn:hover {
-      background-color: #00e6b8;
-      transform: scale(1.05);
     }
 
     .toggle-btn.light {
@@ -132,6 +117,31 @@
       50% { transform: scaleY(1); }
     }
 
+    .bottom-controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .bottom-controls button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #00ffcc;
+      color: #121212;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .bottom-controls button:hover {
+      background-color: #00e6b8;
+      transform: scale(1.05);
+    }
+
     /* Light Mode */
     body.light { background-color: #f0f0f0; color: #333; }
     .player.light { background-color: #fff; color: #333; }
@@ -145,7 +155,6 @@
 
   <div class="player dark" id="playerContainer">
     <div class="top-buttons">
-      <button class="shuffle-btn" onclick="shuffleTrack()">🔀 Shuffle</button>
       <button class="toggle-btn dark" onclick="toggleMode()">🌗 Day Mode</button>
     </div>
 
@@ -176,6 +185,13 @@
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
+
+    <div class="bottom-controls">
+      <button onclick="rewind10()">⏪ 10s</button>
+      <button onclick="togglePlayPause()" id="playPauseBtn">▶️ Play</button>
+      <button onclick="forward10()">10s ⏩</button>
+      <button onclick="nextTrack()">⏭️ Next</button>
+    </div>
   </div>
 
   <script>
@@ -188,11 +204,11 @@
     const progressContainer = document.getElementById('progressBar');
     const toggleBtn = document.querySelector('.toggle-btn');
     const playerContainer = document.getElementById('playerContainer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
     const playlist = ['your-audio.mp3', 'track2.mp3', 'track3.mp3'];
     let currentTrackIndex = 0;
 
     audio.volume = volumeSlider.value;
-    audio.play();
 
     volumeSlider.addEventListener('input', () => {
       audio.volume = volumeSlider.value;
@@ -210,10 +226,12 @@
 
     audio.addEventListener('play', () => {
       beatBars.style.visibility = 'visible';
+      playPauseBtn.textContent = '⏸️ Pause';
     });
 
     audio.addEventListener('pause', () => {
       beatBars.style.visibility = 'hidden';
+      playPauseBtn.textContent = '▶️ Play';
     });
 
     function formatTime(seconds) {
@@ -223,40 +241,4 @@
     }
 
     function seek(event) {
-      const rect = progressContainer.getBoundingClientRect();
-      const offsetX = event.clientX - rect.left;
-      const percent = offsetX / rect.width;
-      audio.currentTime = percent * audio.duration;
-    }
-
-    function toggleMode() {
-      const body = document.body;
-
-      if (body.classList.contains('dark')) {
-        body.classList.replace('dark', 'light');
-        playerContainer.classList.replace('dark', 'light');
-        toggleBtn.classList.replace('dark', 'light');
-        toggleBtn.textContent = '🌙 Dark Mode';
-      } else {
-        body.classList.replace('light', 'dark');
-        playerContainer.classList.replace('light', 'dark');
-        toggleBtn.classList.replace('light', 'dark');
-        toggleBtn.textContent = '🌗 Day Mode';
-      }
-    }
-
-    function shuffleTrack() {
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * playlist.length);
-      } while (newIndex === currentTrackIndex);
-
-      currentTrackIndex = newIndex;
-      audio.src = playlist[currentTrackIndex];
-      audio.load();
-      audio.play();
-    }
-  </script>
-
-</body>
-</html>
+      const rect = progressContainer.getBounding
