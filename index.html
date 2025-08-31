@@ -1,65 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Play Music</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta charset="UTF-8">
+  <title>Custom Audio Player</title>
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .audio-container {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 300px;
+    }
+
+    .audio-container h2 {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    audio {
+      width: 100%;
+      outline: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="logo-title">
-    <h1>Play Music</h1>
+
+  <div class="audio-container">
+    <h2>🎵 Now Playing</h2>
+    <audio controls>
+      <source src="your-audio-file.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
   </div>
 
-  <div class="controls">
-    <input type="text" id="searchInput" placeholder="Search song..." />
-    <input type="range" id="globalVolume" min="0" max="1" step="0.01" value="1" />
-    <button id="shuffleTopBtn"><i class="fas fa-random"></i></button>
-    <button id="darkModeBtn"><i class="fas fa-moon"></i></button>
-  </div>
-
-  <div class="nav" id="artistNav"></div>
-
-  <div class="top-actions">
-    <button id="playAllBtn"><i class="fas fa-play"></i> Play</button>
-    <button id="shuffleAllBtn"><i class="fas fa-random"></i> Shuffle</button>
-  </div>
-<div id="trackList">
-    <!-- Original Track Item Structure -->
-    <div class="track">
-     <audio controls>
-  <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
-      <button class="play-btn"><i class="fas fa-play"></i></button>
-      <span>Guzaara Baaghi</span>
-    </div>
-
-  
-
-
-    
-
-  <div id="playerBar" class="player-bar" style="display:none;">
-    <div class="player-info">
-      <span id="playerSongTitle">Song Title</span>
-      <span id="playerSongArtist" style="font-size:1rem;opacity:0.85;"></span>
-      <div class="player-controls">
-        <button id="prevBtn"><i class="fas fa-backward"></i></button>
-        <button id="playPauseBtn"><i class="fas fa-play"></i></button>
-        <button id="nextBtn"><i class="fas fa-forward"></i></button>
-        <button id="repeatBtn"><i class="fas fa-redo"></i></button>
-        <button id="shuffleBtn"><i class="fas fa-random"></i></button>
-      </div>
-      <div class="player-progress">
-        <span id="currentTime">0:00</span>
-        <input type="range" id="progressBar" min="0" max="100" value="0" />
-        <span id="duration">0:00</span>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
