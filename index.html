@@ -2,66 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🎧 Dynamic Music Player</title>
+  <title>🎧 Liquid Music Player</title>
   <style>
+    /* Liquid background animation */
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background-size: 400% 400%;
+      animation: liquid 15s ease infinite;
       color: white;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
       height: 100vh;
       overflow: hidden;
     }
 
-    h1 {
-      margin: 20px 0;
+    @keyframes liquid {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .song-list {
-      width: 100%;
-      text-align: center;
-      background: rgba(0,0,0,0.3);
-      padding: 10px;
-    }
-
-    .song-list ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .container {
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .song-list li {
-      padding: 10px 15px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .song-list li:hover {
-      background: rgba(255,255,255,0.3);
+      flex: 1;
+      padding: 40px;
+      gap: 40px;
     }
 
     .player {
-      margin-top: 30px;
+      flex: 2;
       background: rgba(0,0,0,0.5);
-      padding: 20px;
-      border-radius: 15px;
-      width: 500px;
-      text-align: center;
+      padding: 30px;
+      border-radius: 20px;
       box-shadow: 0 0 20px #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .player h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px #000;
     }
 
     .controls {
-      margin-top: 20px;
+      margin: 20px 0;
     }
 
     .controls button {
@@ -72,6 +60,7 @@
       background: #ffffff22;
       color: white;
       cursor: pointer;
+      font-weight: bold;
       transition: background 0.3s;
     }
 
@@ -85,6 +74,7 @@
     }
 
     .play-bar {
+      width: 100%;
       margin-top: 20px;
     }
 
@@ -104,6 +94,7 @@
 
     #time {
       margin-top: 10px;
+      text-align: center;
     }
 
     .beats {
@@ -124,38 +115,71 @@
       50% { transform: scaleX(1.2); }
       100% { transform: scaleX(1); }
     }
+
+    .song-list {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 20px;
+      overflow-y: auto;
+    }
+
+    .song-list h3 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .song-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .song-list li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .song-list li:hover {
+      background: rgba(255,255,255,0.4);
+    }
   </style>
 </head>
 <body>
-  <h1>🎵 My Music Player</h1>
+  <div class="container">
+    <div class="player">
+      <h1>🎶 Liquid Music Player</h1>
+      <div id="currentSong">No song playing</div>
 
-  <div class="song-list">
-    <ul id="songs">
-      <li data-src="Guzaara Baaghi 4 128 Kbps.mp3">Guzaara Baaghi </li>
-      <li data-src="Millionaire Glory 128 Kbps.mp3">Millionaire Glory </li>
-      <li data-src="audio/song3.mp3">Song 3</li>
-    </ul>
-  </div>
-
-  <div class="player">
-    <div id="currentSong">No song playing</div>
-
-    <div class="controls">
-      <button id="playAll">▶️ Play All</button>
-      <button id="playPause">⏯️ Play/Pause</button>
-      <button id="next">⏭️ Next</button>
-      <input type="range" id="volume" min="0" max="1" step="0.01">
-    </div>
-
-    <div class="play-bar">
-      <div class="progress" id="progressContainer">
-        <div class="progress-filled" id="progressBar"></div>
+      <div class="controls">
+        <button id="playAll">▶️ Play All</button>
+        <button id="playPause">⏯️ Play/Pause</button>
+        <button id="next">⏭️ Next</button>
+        <input type="range" id="volume" min="0" max="1" step="0.01">
       </div>
-      <div id="time">00:00 / 00:00</div>
+
+      <div class="play-bar">
+        <div class="progress" id="progressContainer">
+          <div class="progress-filled" id="progressBar"></div>
+        </div>
+        <div id="time">00:00 / 00:00</div>
+      </div>
+
+      <audio id="audio" style="display:none;"></audio>
+      <div class="beats"></div>
     </div>
 
-    <audio id="audio" style="display:none;"></audio>
-    <div class="beats"></div>
+    <div class="song-list">
+      <h3>🎵 Song List</h3>
+      <ul id="songs">
+        <li data-src="Guzaara Baaghi 4 128 Kbps.mp3">Guzaara Baaghi</li>
+        <li data-src="Millionaire Glory 128 Kbps.mp3">Millionaire Glory</li>
+        <li data-src="audio/song3.mp3">Song 3</li>
+      </ul>
+    </div>
   </div>
 
   <script>
