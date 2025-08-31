@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Custom Audio Player</title>
+  <title>Audio Player with Dark/Light Mode</title>
   <style>
     body {
       margin: 0;
@@ -43,21 +43,15 @@
       margin-bottom: 15px;
     }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
     .controls button {
-      padding: 10px;
+      padding: 10px 15px;
       font-size: 16px;
       border: none;
       border-radius: 6px;
       background-color: #007bff;
       color: white;
       cursor: pointer;
+      margin: 5px;
     }
 
     .progress {
@@ -67,6 +61,7 @@
       border-radius: 4px;
       cursor: pointer;
       position: relative;
+      margin-top: 15px;
     }
 
     .dark-mode .progress {
@@ -85,10 +80,6 @@
       display: flex;
       justify-content: space-between;
       margin-top: 5px;
-    }
-
-    .volume-control {
-      margin-top: 15px;
     }
 
     .toggle-btn {
@@ -112,14 +103,11 @@
   <div class="song-title" id="songTitle">🎵 Peaceful Melody</div>
   <audio id="audio" preload="metadata">
     <source src="Guzaara Baaghi 4 128 Kbps.mp3" type="audio/mpeg">
-  
     Your browser does not support the audio element.
   </audio>
 
   <div class="controls">
-    <button onclick="rewind()">⏪</button>
     <button onclick="togglePlay()">▶️/⏸️</button>
-    <button onclick="forward()">⏩</button>
   </div>
 
   <div class="progress" onclick="seek(event)">
@@ -130,11 +118,6 @@
     <span id="currentTime">0:00</span>
     <span id="duration">0:00</span>
   </div>
-
-  <div class="volume-control">
-    <label for="volume">🔊 Volume</label>
-    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
-  </div>
 </div>
 
 <script>
@@ -142,18 +125,9 @@
   const progressBar = document.getElementById('progressBar');
   const currentTimeEl = document.getElementById('currentTime');
   const durationEl = document.getElementById('duration');
-  const volumeSlider = document.getElementById('volume');
 
   function togglePlay() {
     audio.paused ? audio.play() : audio.pause();
-  }
-
-  function rewind() {
-    audio.currentTime = Math.max(0, audio.currentTime - 10);
-  }
-
-  function forward() {
-    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
   }
 
   function formatTime(seconds) {
@@ -177,10 +151,6 @@
     const percent = (e.clientX - rect.left) / rect.width;
     audio.currentTime = percent * audio.duration;
   }
-
-  volumeSlider.addEventListener('input', () => {
-    audio.volume = volumeSlider.value;
-  });
 
   function toggleMode() {
     document.body.classList.toggle('dark-mode');
